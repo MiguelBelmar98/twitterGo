@@ -4,10 +4,10 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/MiguelBelmar98/twitterGo/awsgo"
-	"github.com/MiguelBelmar98/twitterGo/models"
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/service/secretsmanager"
+	"github.com/miguelbelmar98/twittergo/awsgo"
+	"github.com/miguelbelmar98/twittergo/models"
 )
 
 func GetSecret(secretName string) (models.Secret, error) {
