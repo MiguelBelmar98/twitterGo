@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	"github.com/aws/aws-lambda-go/events"
-	lambda "github.com/aws/aws-lambda-go/lambda"
+	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/miguelbelmar98/twittergo/awsgo"
 	"github.com/miguelbelmar98/twittergo/bd"
 	"github.com/miguelbelmar98/twittergo/handlers"
@@ -46,6 +46,7 @@ func EjecutoLambda(ctx context.Context, request events.APIGatewayProxyRequest) (
 	}
 
 	path := strings.Replace(request.PathParameters["twitterGo"], os.Getenv("UrlPrefix"), "", -1)
+	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("path"), path)
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("method"), request.HTTPMethod)
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("user"), SecretModel.Username)
 	awsgo.Ctx = context.WithValue(awsgo.Ctx, models.Key("password"), SecretModel.Password)
@@ -71,6 +72,25 @@ func EjecutoLambda(ctx context.Context, request events.APIGatewayProxyRequest) (
 	}
 
 	respAPI := handlers.Manejadores(awsgo.Ctx, request)
+	if respAPI.CustomResponse != nil {
+		res = &events.APIGatewayProxyResponse{
+			StatusCode: respAPI.StatusCode,
+			Body:       respAPI.Message,
+			Headers: map[string]string{
+				"Content-Type": "aplication/json",
+			},
+		}
+		return res, nil
+	} else {
+		res = &events.APIGatewayProxyResponse{
+			StatusCode: respAPI.StatusCode,
+			Body:       respAPI.Message,
+			Headers: map[string]string{
+				"Content-Type": "aplication/json",
+			},
+		}
+		return res, nil
+	}
 
 }
 
