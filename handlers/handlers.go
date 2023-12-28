@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/miguelbelmar98/twittergo/jwt"
 	"github.com/miguelbelmar98/twittergo/models"
+	"github.com/miguelbelmar98/twittergo/routers"
 )
 
 func Manejadores(ctx context.Context, request events.APIGatewayProxyRequest) models.RespApi {
@@ -15,7 +16,7 @@ func Manejadores(ctx context.Context, request events.APIGatewayProxyRequest) mod
 	var r models.RespApi
 	r.StatusCode = 400
 
-	isOk, statusCode, msg, claim := validoAuthorization(ctx, request)
+	isOk, statusCode, msg, _ := validoAuthorization(ctx, request)
 	if !isOk {
 		r.StatusCode = statusCode
 		r.Message = msg
